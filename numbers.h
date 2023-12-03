@@ -110,3 +110,50 @@ int bits8_to_int_signed(struct bits8 x) {
   z = (-128)*bit_to_int(x.b7) + 64*bit_to_int(x.b6) + 32*bit_to_int(x.b5) + 16*bit_to_int(x.b4) + 8 * bit_to_int(x.b3) + 4 * bit_to_int(x.b2) + 2 * bit_to_int(x.b1) + bit_to_int(x.b0);
   return z; 
 }
+
+struct bits8 bits8_shift(struct bits8 x) {
+    struct bits8 shifted;
+    shifted.b7 = x.b6;
+    shifted.b6 = x.b5;
+    shifted.b5 = x.b4;
+    shifted.b4 = x.b3;
+    shifted.b3 = x.b2;
+    shifted.b2 = x.b1;
+    shifted.b1 = x.b0;
+    shifted.b0 = make_zero();
+    return shifted;
+}
+
+struct bits8 bits8_and(struct bits8 x, struct bit ybit) {
+    struct bits8 masked = {
+      bit_and(x.b0, ybit), 
+      bit_and(x.b1, ybit), 
+      bit_and(x.b2, ybit), 
+      bit_and(x.b3, ybit),
+      bit_and(x.b4, ybit), 
+      bit_and(x.b5, ybit),
+      bit_and(x.b6, ybit), 
+      bit_and(x.b7, ybit)};
+    return masked;
+}
+
+struct bits8 bits8_mul(struct bits8 x, struct bits8 y) {
+    struct bits8 result = bits8_from_int(0);
+    struct bits8 temp_x = x;
+    result = bits8_add(result, bits8_and(temp_x, y.b0));
+    temp_x = bits8_shift(temp_x);
+    result = bits8_add(result, bits8_and(temp_x, y.b1));
+    temp_x = bits8_shift(temp_x);
+    result = bits8_add(result, bits8_and(temp_x, y.b2));
+    temp_x = bits8_shift(temp_x);
+    result = bits8_add(result, bits8_and(temp_x, y.b3));
+    temp_x = bits8_shift(temp_x);
+    result = bits8_add(result, bits8_and(temp_x, y.b4));
+    temp_x = bits8_shift(temp_x);
+    result = bits8_add(result, bits8_and(temp_x, y.b5));
+    temp_x = bits8_shift(temp_x);
+    result = bits8_add(result, bits8_and(temp_x, y.b6));
+    temp_x = bits8_shift(temp_x);
+    result = bits8_add(result, bits8_and(temp_x, y.b7));
+    return result;
+}
