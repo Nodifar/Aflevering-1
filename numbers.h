@@ -12,6 +12,7 @@ struct bits8 {
   struct bit b6;
   struct bit b7;
 };
+struct bits8 bits8_subtract(struct bits8 a, struct bits8 b);
 
 
 struct bits8 bits8_from_int(unsigned int x) {
@@ -98,6 +99,7 @@ struct bits8 bits8_negate(struct bits8 x) {
   x.b7 = bit_not(x.b7);
   return bits8_add(x, c);
 }
+
 
 struct bit make_zero(void) {
   struct bit b;
